@@ -13,13 +13,13 @@ Console.WriteLine("MOdyfikacja");
 
 static int feadture_average(int[] tab)
 {
-    int average = 0;
+    int a = 0;
     for (int i = 0; i < tab.Length; i++)
     {
-        average += tab[i];
+        a += tab[i];
     }
     
-    return average/tab.Length;
+    return a/tab.Length;
 }
 
 static int feature_max(int[] tab)
