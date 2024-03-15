@@ -10,3 +10,14 @@ for (int i = 0; i < a; i++)
 }
 
 Console.WriteLine("MOdyfikacja");
+
+static int feadture_average(int[] tab)
+{
+    int average = 0;
+    for (int i = 0; i < tab.Length; i++)
+    {
+        average += tab[i];
+    }
+    
+    return average/tab.Length;
+}
