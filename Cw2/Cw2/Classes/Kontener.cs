@@ -47,4 +47,16 @@ public abstract class Kontener
                +wagaWlasna+"kg, glebokosc: "+glebokosc
                +"cm, maksymalna ladownosc: "+maksymalnaLadownosc+"kg";
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || this.GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        Kontener kontener = (Kontener)obj;
+
+        return (numerSeryjny == kontener.numerSeryjny);
+    }
 }
