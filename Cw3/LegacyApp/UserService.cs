@@ -6,24 +6,29 @@ namespace LegacyApp
     {
         public bool AddUser(string firstName, string lastName, string email, DateTime dateOfBirth, int clientId)
         {
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            if (!NameValidation(firstName, lastName) || !EmailValidation(email) || !AgeValidation(dateOfBirth))
             {
                 return false;
             }
 
-            if (!email.Contains("@") && !email.Contains("."))
-            {
-                return false;
-            }
+            // if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            // {
+            //     return false;
+            // }
+            //
+            // if (!email.Contains("@") && !email.Contains("."))
+            // {
+            //     return false;
+            // }
 
-            var now = DateTime.Now;
-            int age = now.Year - dateOfBirth.Year;
-            if (now.Month < dateOfBirth.Month || (now.Month == dateOfBirth.Month && now.Day < dateOfBirth.Day)) age--;
-
-            if (age < 21)
-            {
-                return false;
-            }
+            // var now = DateTime.Now;
+            // int age = now.Year - dateOfBirth.Year;
+            // if (now.Month < dateOfBirth.Month || (now.Month == dateOfBirth.Month && now.Day < dateOfBirth.Day)) age--;
+            //
+            // if (age < 21)
+            // {
+            //     return false;
+            // }
 
             var clientRepository = new ClientRepository();
             var client = clientRepository.GetById(clientId);
@@ -67,6 +72,46 @@ namespace LegacyApp
 
             UserDataAccess.AddUser(user);
             return true;
+        }
+
+        public bool NameValidation(string firstName, string lastName)
+        {
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool EmailValidation(string email)
+        {
+            if (!email.Contains("@") && !email.Contains("."))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public bool AgeValidation(DateTime dateOfBirth)
+        {
+            var now = DateTime.Now;
+            int age = now.Year - dateOfBirth.Year;
+            if (now.Month < dateOfBirth.Month || (now.Month == dateOfBirth.Month && now.Day < dateOfBirth.Day)) age--;
+
+            if (age < 21)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
