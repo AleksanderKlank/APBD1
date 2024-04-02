@@ -5,7 +5,7 @@ namespace Cw2.Classes;
 
 public class KontenerPlyny : Kontener, IHazardNotifier
 {
-    public bool niebezpiecznyLadunek;
+    private bool _niebezpiecznyLadunek;
     public KontenerPlyny(
         double wysokosc,
         double wagaWlasna,
@@ -14,13 +14,13 @@ public class KontenerPlyny : Kontener, IHazardNotifier
         ) : base( wysokosc, wagaWlasna, glebokosc, maksymalnaLadownosc)
     {
         numerSeryjny = "KON-L-" + ++ostatniNumerSeryjny;
-        niebezpiecznyLadunek = false;
+        _niebezpiecznyLadunek = false;
     }
 
 
     new public void ZaladowanieKontenera(string ladunek, double masa)
     {
-        if (niebezpiecznyLadunek)
+        if (_niebezpiecznyLadunek)
         {
             if (masaLadunku + masa > maksymalnaLadownosc * 0.5)
             {
@@ -45,7 +45,7 @@ public class KontenerPlyny : Kontener, IHazardNotifier
     }
     public void ZaladowanieKontenera(string ladunek, double masa, bool czyNiebezpiecznyLadunek)
     {
-        niebezpiecznyLadunek = czyNiebezpiecznyLadunek;
+        _niebezpiecznyLadunek = czyNiebezpiecznyLadunek;
         ZaladowanieKontenera(ladunek,masa);
     }
 

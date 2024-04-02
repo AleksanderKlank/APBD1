@@ -21,11 +21,11 @@ public class Kontenerowiec
     {
         if (kontenery.Count < maxKontenerow)
         {
-            if (maksymalnaWaga >= kontener.wagaWlasna + kontener.masaLadunku)
+            if (maksymalnaWaga >= kontener.WagaWlasna + kontener.MasaLadunku)
             {
                 kontenery.Add(kontener);
-                obecnaWaga += kontener.wagaWlasna + kontener.masaLadunku;
-                Console.WriteLine("Zaladowano kontener na statek - " + kontener.numerSeryjny);
+                obecnaWaga += kontener.WagaWlasna + kontener.MasaLadunku;
+                Console.WriteLine("Zaladowano kontener na statek - " + kontener.NumerSeryjny);
             }
             else
             {

@@ -4,15 +4,31 @@ namespace Cw2;
 
 public abstract class Kontener
 {
-    public double
+    protected double
         masaLadunku,
         wysokosc,
         wagaWlasna,
         glebokosc,
         maksymalnaLadownosc;
+    
+    protected static int ostatniNumerSeryjny;
+    protected string numerSeryjny;
+    public string NumerSeryjny
+    {
+        get => numerSeryjny;
+        set => numerSeryjny = NumerSeryjny;
+    }
+    public double WagaWlasna
+    {
+        get => wagaWlasna;
+        set => wagaWlasna = WagaWlasna;
+    }
 
-    public string numerSeryjny;
-    public static int ostatniNumerSeryjny;
+    public double MasaLadunku
+    {
+        get => masaLadunku;
+        set => masaLadunku = MasaLadunku;
+    }
 
     public Kontener(double wysokosc, double wagaWlasna, double glebokosc, double maksymalnaLadownosc)
     {
@@ -42,10 +58,10 @@ public abstract class Kontener
 
     public override string ToString()
     {
-        return numerSeryjny+" -  masaladunku: "+masaLadunku
-               + "kg, wysokosc: "+wysokosc+"cm, wagaWlasna: "
-               +wagaWlasna+"kg, glebokosc: "+glebokosc
-               +"cm, maksymalna ladownosc: "+maksymalnaLadownosc+"kg";
+        return numerSeryjny + " -  masaladunku: " + masaLadunku
+               + "kg, wysokosc: " + wysokosc + "cm, wagaWlasna: "
+               + wagaWlasna + "kg, glebokosc: " + glebokosc
+               + "cm, maksymalna ladownosc: " + maksymalnaLadownosc + "kg";
     }
 
     public override bool Equals(object? obj)

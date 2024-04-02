@@ -4,8 +4,8 @@ namespace Cw2.Classes;
 
 public class KontenerChlodniczy : Kontener
 {
-    public double temperatura;
-    public List<string> towary;
+    private double temperatura;
+    private List<string> towary;
     public Dictionary<string, double> productTemperatures = new Dictionary<string, double>()
     {
         {"Bananas", 13.3},
