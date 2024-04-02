@@ -28,11 +28,8 @@ namespace LegacyApp
             {
                 return false;
             }
-
-            // var clientRepository = new ClientRepository();
-            // var client = clientRepository.GetById(clientId);
+            
             var client = _clientRepository.GetById(clientId);
-
             var user = new User
             {
                 Client = client,
@@ -41,37 +38,42 @@ namespace LegacyApp
                 FirstName = firstName,
                 LastName = lastName
             };
-
-            if (client.Type == "VeryImportantClient")
-            {
-                user.HasCreditLimit = false;
-            }
-            else if (client.Type == "ImportantClient")
-            {
-                // using (var userCreditService = new UserCreditService())
-                // {
-                //     int creditLimit = userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
-                //     creditLimit = creditLimit * 2;
-                //     user.CreditLimit = creditLimit;
-                // }
-                int creditLimit = _userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
-                creditLimit = creditLimit * 2;
-                user.CreditLimit = creditLimit;
-            }
-            else
-            {
-                user.HasCreditLimit = true;
-                //using (var userCreditService = new UserCreditService())
-                //{
-                int creditLimit = _userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth); 
-                user.CreditLimit = creditLimit;
-                //}
-            }
-
-            if (user.HasCreditLimit && user.CreditLimit < 500)
+            
+            //Podaje user jako referencje, żeby mieć pewność, że hasCreditLimit i creditLimit zostana zapisane w obiekcie
+            if (!CreditLimitValidation(ref user, client))
             {
                 return false;
             }
+            // if (client.Type == "VeryImportantClient")
+            // {
+            //     user.HasCreditLimit = false;
+            // }
+            // else if (client.Type == "ImportantClient")
+            // {
+            //     // using (var userCreditService = new UserCreditService())
+            //     // {
+            //     //     int creditLimit = userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
+            //     //     creditLimit = creditLimit * 2;
+            //     //     user.CreditLimit = creditLimit;
+            //     // }
+            //     int creditLimit = _userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
+            //     creditLimit = creditLimit * 2;
+            //     user.CreditLimit = creditLimit;
+            // }
+            // else
+            // {
+            //     user.HasCreditLimit = true;
+            //     //using (var userCreditService = new UserCreditService())
+            //     //{
+            //     int creditLimit = _userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth); 
+            //     user.CreditLimit = creditLimit;
+            //     //}
+            // }
+            //
+            // if (user.HasCreditLimit && user.CreditLimit < 500)
+            // {
+            //     return false;
+            // }
 
             UserDataAccess.AddUser(user);
             return true;
@@ -116,5 +118,37 @@ namespace LegacyApp
                 return true;
             }
         }
+
+        public bool CreditLimitValidation(ref User user, Client client)
+        {
+            if (client.Type == "VeryImportantClient")
+            {
+                user.HasCreditLimit = false;
+            }
+            else if (client.Type == "ImportantClient")
+            {
+                int creditLimit = _userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
+                creditLimit = creditLimit * 2;
+                user.CreditLimit = creditLimit;
+            }
+            else
+            {
+                user.HasCreditLimit = true;
+                int creditLimit = _userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth); 
+                user.CreditLimit = creditLimit;
+            }
+
+            if (user.HasCreditLimit && user.CreditLimit < 500)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+        
+        
     }
 }

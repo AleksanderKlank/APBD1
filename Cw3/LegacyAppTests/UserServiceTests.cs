@@ -94,4 +94,34 @@ public class UserServiceTests
         Assert.Equal(true, result);
     }
 
+    [Fact]
+    public void AddUser_Should_Return_False_When_HasCreditLimit_And_CreditLimit_Is_Less_Than_500()
+    {
+        string firstName = "Jan";
+        string lastName = "Kowalski";
+        DateTime dateOfBirth = new DateTime(1999, 2, 1);
+        int clientId = 1;
+        string email = "doe@gmail.pl";
+        var service = new UserService();
+        
+        bool result = service.AddUser(firstName, lastName, email, dateOfBirth, clientId);
+        
+        Assert.Equal(false,result);
+    }
+    
+    [Fact]
+    public void AddUser_Should_Return_True_When_VeryImportantClient()
+    {
+        string firstName = "Jan";
+        string lastName = "Malewski";
+        DateTime dateOfBirth = new DateTime(1999, 2, 1);
+        int clientId = 1;
+        string email = "doe@gmail.pl";
+        var service = new UserService();
+        
+        bool result = service.AddUser(firstName, lastName, email, dateOfBirth, clientId);
+        
+        Assert.Equal(true,result);
+    }
+
 }
