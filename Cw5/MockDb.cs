@@ -17,8 +17,8 @@ public interface IMockDb
     public ICollection<Animal> GetAll();
     public Animal? GetById(int id);
     public void Add(Animal animal);
-    public void Edit(int id,Animal animal);
-    public void Delete(int id);
+    public bool Edit(int id,Animal animal);
+    public bool Delete(int id);
 
 
 }
@@ -65,17 +65,27 @@ public class MockDb : IMockDb
         _animals.Add(animal);
     }
 
-    public void Edit(int id, Animal animal)
+    public bool Edit(int id, Animal animal)
     {
         int index = _animals.FindIndex(a => a.Id == id);
         if (index != -1)
-            _animals[index] = animal;
+        {
+             _animals[index] = animal;
+             return true;
+        }
+
+        return false;
     }
 
-    public void Delete(int id)
+    public bool Delete(int id)
     {
         int index = _animals.FindIndex(a => a.Id == id);
         if (index != -1)
+        {
             _animals.RemoveAt(index);
+            return true;
+        }
+
+        return false;
     }
 }
