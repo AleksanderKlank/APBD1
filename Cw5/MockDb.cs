@@ -9,8 +9,18 @@ public class Animal
     public string Category { get; set; }
     public string Color { get; set; }
     public double Weight { get; set; }
-    
+    public List<Visit> Visits { get; set; }
+
 }
+
+public class Visit
+{
+    public DateTime DateOfVisit { get; set; }
+    //public Animal VisitingAnimal { get; set; }
+    public String Description { get; set; }
+    public String Price { get; set; }
+}
+
 
 public interface IMockDb
 {
@@ -20,13 +30,15 @@ public interface IMockDb
     public bool Edit(int id,Animal animal);
     public bool Delete(int id);
 
+    public List<Visit> GetVisits(int id);
+    public bool AddVisit(Visit visit, int id);
+
 
 }
 
 public class MockDb : IMockDb
 {
     private List<Animal> _animals;
-
     public MockDb()
     {
         _animals = new List<Animal>()
@@ -37,7 +49,16 @@ public class MockDb : IMockDb
                 Color = "czarny",
                 Category = "Kot",
                 Name = "Luna",
-                Weight = 10
+                Weight = 10,
+                Visits = new List<Visit>()
+                {
+                    new Visit()
+                    {
+                        DateOfVisit = new DateTime(2023, 3, 12),
+                        Description = "Wizyta kontrolna",
+                        Price = "80 zł",
+                    }
+                }
             },
             new Animal()
             {
@@ -45,7 +66,16 @@ public class MockDb : IMockDb
                 Color = "brązowy",
                 Category = "Pies",
                 Name = "Nono",
-                Weight = 8
+                Weight = 8,
+                Visits = new List<Visit>()
+                {
+                    new Visit()
+                    {
+                        DateOfVisit = new DateTime(2023, 4, 1),
+                        Description = "Wizyta kontrolna",
+                        Price = "80 zł",
+                    }
+                }
             }
         };
     }
@@ -83,6 +113,29 @@ public class MockDb : IMockDb
         if (index != -1)
         {
             _animals.RemoveAt(index);
+            return true;
+        }
+
+        return false;
+    }
+
+    public List<Visit> GetVisits(int id)
+    {
+        int index = _animals.FindIndex(a => a.Id == id);
+        if (index != -1)
+        {
+            return _animals[index].Visits;
+        }
+
+        return null;
+    }
+
+    public bool AddVisit(Visit visit, int id)
+    {
+        int index = _animals.FindIndex(a => a.Id == id);
+        if (index != -1)
+        {
+            _animals[index].Visits.Add(visit);
             return true;
         }
 
