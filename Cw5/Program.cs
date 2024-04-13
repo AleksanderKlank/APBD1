@@ -16,20 +16,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/animalList", () => 
-    {
-        var tmp = new Animal(1, "Korbi", "Kot", 20, "Rudy");
-        return tmp;
-    })
-    .WithName("GetAnimalList")
-    .WithOpenApi();
-app.Run();
-
-
-record Animal(int Id, string Name, string Category, double Weight, string Color)
-{
-    
-}
 
 
 
