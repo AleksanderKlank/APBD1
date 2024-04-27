@@ -117,6 +117,31 @@ public static class AnimalsEndpoints
             }
         });
 
+        app.MapPut("/api/animals/{idAnimal}", (IConfiguration configuration, CreateAnimalRequest request, int idAnimal) =>
+                {
+                    var validation = new AnimalValidator().Validate(request);
+                    if (!validation.IsValid) return Results.ValidationProblem(validation.ToDictionary());
+
+                    using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("Default")))
+                    {
+                        var sqlCommand = new SqlCommand("UPDATE Animal SET Name = @n, Description = @d, Area = @a, Category = @c Where IdAnimal = @idAnimal",sqlConnection);
+                        sqlCommand.Parameters.AddWithValue("@n", request.Name);
+                        sqlCommand.Parameters.AddWithValue("@d", request.Description);
+                        sqlCommand.Parameters.AddWithValue("@c", request.Category);
+                        sqlCommand.Parameters.AddWithValue("@a", request.Area);
+                        sqlCommand.Parameters.AddWithValue("@idAnimal", idAnimal);
+                        sqlCommand.Connection.Open();
+
+                        var result = sqlCommand.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            return Results.Ok($"Record with ID {idAnimal} has been successfully updated.");
+                        }
+                        
+                        return Results.NotFound($"Record with ID {idAnimal} not found.");
+                    }
+                });
         
         app.MapDelete("/api/animals/{idAnimal}", async (IConfiguration configuration, int idAnimal) =>
         {
@@ -136,10 +161,8 @@ public static class AnimalsEndpoints
                         {
                             return Results.Ok($"Record with ID {idAnimal} has been successfully deleted.");
                         }
-                        else
-                        {
-                            return Results.NotFound($"Record with ID {idAnimal} not found.");
-                        }
+                        
+                        return Results.NotFound($"Record with ID {idAnimal} not found.");
                     }
                 }
                 catch (Exception ex)
@@ -148,5 +171,7 @@ public static class AnimalsEndpoints
                 }
             }
         });
+
+        
     }
 }
