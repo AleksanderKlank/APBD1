@@ -1,4 +1,3 @@
-using System.Data;
 using System.Data.SqlClient;
 
 namespace Cw6.Endpoints;
@@ -40,7 +39,7 @@ public static class AnimalsEndpoints
 
                 sqlCommand.Parameters.AddWithValue("@id", id);
                 sqlCommand.Connection.Open();
-                
+
                 var reader = sqlCommand.ExecuteReader();
                 while (reader.Read())
                 {
@@ -57,19 +56,20 @@ public static class AnimalsEndpoints
 
             return Results.Ok(animals);
         });
-        
+
         app.MapGet("api/animals/{orderBy?}", (IConfiguration configuration, string? orderBy) =>
         {
-            var allowedColumns = new List<string> { "IdAnimal", "Name", "Description", "Category", "Area" };
-            if (orderBy == null)
+            var allowedColumns = new List<string> { "Name", "Description", "Category", "Area" };
+            if (string.IsNullOrEmpty(orderBy))
             {
                 orderBy = "Name";
             }
+
             if (!allowedColumns.Contains(orderBy))
             {
                 return Results.BadRequest("Invalid order by parameter.");
             }
-            
+
             var animals = new List<GetAllAnimalsResponse>();
             using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("Default")))
             {
@@ -77,7 +77,7 @@ public static class AnimalsEndpoints
                 var sqlCommand = new SqlCommand(sqlCommandText, sqlConnection);
 
                 sqlCommand.Connection.Open();
-                
+
                 var reader = sqlCommand.ExecuteReader();
                 while (reader.Read())
                 {
@@ -94,24 +94,58 @@ public static class AnimalsEndpoints
 
             return Results.Ok(animals);
         });
-        
-        app.MapPost("api/AddAnimals", (IConfiguration configuration, CreateAnimalRequest request) =>
+
+        app.MapPost("api/animals", (IConfiguration configuration, CreateAnimalRequest request) =>
         {
-            // var validation = validator.Validate(request);
-            // if (!validation.IsValid) return Results.ValidationProblem(validation.ToDictionary());
+            var validation = new AnimalValidator().Validate(request);
+            if (!validation.IsValid) return Results.ValidationProblem(validation.ToDictionary());
+
+            using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("Default")))
+            {
+                var sqlCommand =
+                    new SqlCommand("INSERT INTO Animal (Name, Description, Category, Area) values (@n, @d, @c, @a)",
+                        sqlConnection);
+                sqlCommand.Parameters.AddWithValue("@n", request.Name);
+                sqlCommand.Parameters.AddWithValue("@d", request.Description);
+                sqlCommand.Parameters.AddWithValue("@c", request.Category);
+                sqlCommand.Parameters.AddWithValue("@a", request.Area);
+                sqlCommand.Connection.Open();
+
+                sqlCommand.ExecuteNonQuery();
+
+                return Results.Created("", null);
+            }
+        });
+
+        
+        app.MapDelete("/api/animals/{idAnimal}", async (IConfiguration configuration, int idAnimal) =>
+        {
             
             using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("Default")))
             {
-                var sqlCommand = new SqlCommand("INSERT INTO Animal (Name, Description, Category, Area) values (@fn, @ln, @ph, @bd)", sqlConnection);
-                sqlCommand.Parameters.AddWithValue("@fn", request.Name);
-                sqlCommand.Parameters.AddWithValue("@ln", request.Description);
-                sqlCommand.Parameters.AddWithValue("@ph", request.Category);
-                sqlCommand.Parameters.AddWithValue("@bd", request.Area);
-                sqlCommand.Connection.Open();
+                try
+                {
+                    await sqlConnection.OpenAsync();
+                    using (var sqlCommand = new SqlCommand("DELETE FROM Animal WHERE IdAnimal = @idAnimal", sqlConnection))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@idAnimal", idAnimal);
+
+                        var result = await sqlCommand.ExecuteNonQueryAsync();
                 
-                sqlCommand.ExecuteNonQuery();
-        
-                return Results.Created("", null);
+                        if (result > 0)
+                        {
+                            return Results.Ok($"Record with ID {idAnimal} has been successfully deleted.");
+                        }
+                        else
+                        {
+                            return Results.NotFound($"Record with ID {idAnimal} not found.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem("An error occurred while processing your request: " + ex.Message);
+                }
             }
         });
     }
