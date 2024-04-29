@@ -1,4 +1,5 @@
 using Cw7.DTOs;
+using Cw7.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
