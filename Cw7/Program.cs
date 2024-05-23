@@ -1,5 +1,6 @@
 using Cw7.DTOs;
 using Cw7.Endpoints;
+using Cw7.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// Register custom services
 
+builder.Services.AddScoped<IDbService, DbService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
