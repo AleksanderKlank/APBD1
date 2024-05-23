@@ -1,4 +1,6 @@
-﻿using Exercise6.Models;
+﻿using System.Reflection.PortableExecutable;
+using System.Text.RegularExpressions;
+using Exercise6.Models;
 
 namespace Exercise6
 {
@@ -249,7 +251,7 @@ namespace Exercise6
         /// </summary>
         public static bool Task8()
         {
-            bool result = false;
+            bool result = Emps.Any(e => e.Job.Equals("Backend programmer"));
             return result;
         }
 
@@ -259,7 +261,7 @@ namespace Exercise6
         /// </summary>
         public static Emp Task9()
         {
-            Emp result = null;
+            Emp result = Emps.OrderByDescending(e=>e.HireDate).First(e => e.Job.Equals("Frontend programmer"));
             return result;
         }
 
@@ -270,7 +272,21 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task10()
         {
-            IEnumerable<object> result = null;
+            IEnumerable<object> result = Emps.Select(e => new 
+                { 
+                    Ename = e.Ename, 
+                    Job = e.Job, 
+                    HireDate = e.HireDate 
+                })
+                .Union(new[] 
+                { 
+                    new 
+                    { 
+                        Ename = "Brak wartości", 
+                        Job = (string)null, 
+                        HireDate = (DateTime?)null 
+                    } 
+                });
             return result;
         }
 
@@ -287,7 +303,15 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task11()
         {
-            IEnumerable<object> result = null;
+            IEnumerable<object> result = Emps
+                .GroupBy(emp => emp.Deptno)
+                .Where(group => group.Count() > 1)
+                .Select(group => new 
+                { 
+                    Name = Depts.FirstOrDefault(dept => dept.Deptno == group.Key).Dname, 
+                    NumOfEmployees = group.Count() 
+                });
+            
             return result;
         }
 
@@ -300,7 +324,7 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Emp> Task12()
         {
-            IEnumerable<Emp> result = null;
+            IEnumerable<Emp> result = Emps.WithSubordinates();
             return result;
         }
 
@@ -333,5 +357,12 @@ namespace Exercise6
     public static class CustomExtensionMethods
     {
         //Put your extension methods here
+        public static IEnumerable<Emp> WithSubordinates(this IEnumerable<Emp> emps)
+        {
+            return emps
+                .Where(e => emps.Any(sub => sub.Mgr != null && sub.Mgr.Empno == e.Empno))
+                .OrderBy(e => e.Ename)
+                .ThenByDescending(e => e.Salary);
+        }
     }
 }
