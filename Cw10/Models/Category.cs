@@ -15,7 +15,7 @@ public class Category
     [Column("name")]
     public string Name { get; set; }
 
-    public IEnumerable<ProductsCategories> ProductsCategoriesEnumerable { get; set; }
+    public ICollection<ProductsCategories> ProductsCategories { get; set; }
     
 
 }

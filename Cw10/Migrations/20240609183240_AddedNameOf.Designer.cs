@@ -3,6 +3,7 @@ using Cw10.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cw10.Migrations
 {
     [DbContext(typeof(Cw10Context))]
-    partial class Cw10ContextModelSnapshot : ModelSnapshot
+    [Migration("20240609183240_AddedNameOf")]
+    partial class AddedNameOf
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,16 +65,6 @@ namespace Cw10.Migrations
                     b.HasIndex("IdRole");
 
                     b.ToTable("Accounts");
-
-                    b.HasData(
-                        new
-                        {
-                            IdAccount = 1,
-                            Email = "j@k.com",
-                            FirstName = "Jan",
-                            IdRole = 1,
-                            LastName = "Kowalski"
-                        });
                 });
 
             modelBuilder.Entity("Cw10.Models.Category", b =>
@@ -92,13 +85,6 @@ namespace Cw10.Migrations
                     b.HasKey("IdCategory");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            IdCategory = 1,
-                            Name = "Test"
-                        });
                 });
 
             modelBuilder.Entity("Cw10.Models.Product", b =>
@@ -135,17 +121,6 @@ namespace Cw10.Migrations
                     b.HasKey("IdProduct");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            IdProduct = 1,
-                            Depth = 0.1m,
-                            Height = 0.2m,
-                            Name = "TestPName",
-                            Weight = 0.3m,
-                            Width = 0.4m
-                        });
                 });
 
             modelBuilder.Entity("Cw10.Models.ProductsCategories", b =>
@@ -163,13 +138,6 @@ namespace Cw10.Migrations
                     b.HasIndex("IdProduct");
 
                     b.ToTable("Products_Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            IdCategory = 1,
-                            IdProduct = 1
-                        });
                 });
 
             modelBuilder.Entity("Cw10.Models.Role", b =>
@@ -190,13 +158,6 @@ namespace Cw10.Migrations
                     b.HasKey("IdRole");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            IdRole = 1,
-                            Name = "User"
-                        });
                 });
 
             modelBuilder.Entity("Cw10.Models.ShoppingCart", b =>
@@ -218,14 +179,6 @@ namespace Cw10.Migrations
                     b.HasIndex("IdProduct");
 
                     b.ToTable("Shopping_Carts");
-
-                    b.HasData(
-                        new
-                        {
-                            IdAccount = 1,
-                            IdProduct = 1,
-                            Amount = 10
-                        });
                 });
 
             modelBuilder.Entity("Cw10.Models.Account", b =>

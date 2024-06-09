@@ -32,7 +32,7 @@ public class Product
     [Column("depth", TypeName="decimal(5,2)")]
     public double Depth { get; set; }
     
-    public IEnumerable<ProductsCategories> ProductsCategoriesEnumerable { get; set; }
-    public IEnumerable<ShoppingCart> ShoppingCartsEnumerable { get; set; }
+    public ICollection<ProductsCategories> ProductsCategories { get; set; }
+    public ICollection<ShoppingCart> ShoppingCarts { get; set; }
     
 }

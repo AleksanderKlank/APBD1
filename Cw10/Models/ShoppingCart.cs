@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cw10.Models;
 
-[PrimaryKey("IdAccount","IdProduct")]
+[PrimaryKey(nameof(IdAccount),nameof(IdProduct))]
 [Table("Shopping_Carts")]
 public class ShoppingCart
 {
-    [ForeignKey("Account")]
+    [ForeignKey(nameof(Account))]
     [Column("FK_account")]
     public int IdAccount { get; set; }
 
     public Account Account { get; set; }
     
-    [ForeignKey("Product")]
+    [ForeignKey(nameof(Product))]
     [Column("FK_product")]
     public int IdProduct { get; set; }
     
