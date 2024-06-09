@@ -1,30 +1,38 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cw10.Models;
 
+[Table("Products")]
 public class Product
 {
     [Key]
+    [Column("PK_product")]
     public int IdProduct { get; set; }
     
     [Required]
     [MaxLength(100)]
+    [Column("name")]
     public string Name { get; set; }
     
     [Required]
-    [Precision(5,2)]
+    [Column("weight", TypeName="decimal(5,2)")]
     public double Weight { get; set; }
     
     [Required]
-    [Precision(5,2)]
+    [Column("width", TypeName="decimal(5,2)")]
     public double Width { get; set; }
     
     [Required]
-    [Precision(5,2)]
+    [Column("height", TypeName="decimal(5,2)")]
     public double Height { get; set; }
     
     [Required]
-    [Precision(5,2)]
+    [Column("depth", TypeName="decimal(5,2)")]
     public double Depth { get; set; }
+    
+    public IEnumerable<ProductsCategories> ProductsCategoriesEnumerable { get; set; }
+    public IEnumerable<ShoppingCart> ShoppingCartsEnumerable { get; set; }
+    
 }
