@@ -1,5 +1,5 @@
 using Cw10.Models;
-using Cw10.RequestModels;
+
 
 namespace Cw10.ResponseModels;
 
@@ -11,3 +11,4 @@ public record AccountResponse(
     string role,
     List<ShoppingCartRequest> cart
     );
+public record ShoppingCartRequest(int productId, string productName, int amount );
